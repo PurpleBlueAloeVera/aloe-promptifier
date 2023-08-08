@@ -28,15 +28,15 @@ Any feedback would be greatly appreciated !
 
 Addition:
 
-", <lora:some_subject_you_simp_over:0.55>, simp subject, "
+``, <lora:some_subject_you_simp_over:0.55>, simp subject, ``
 
 Trigger words:
 
-"simpsu"
+``simpsu``
 
 How the prompt will change if you type "simpsu":
 
 Positive prompt:
-"simpsu, <lora:some_subject_you_simp_over:0.55>, simp subject, "
+``simpsu, <lora:some_subject_you_simp_over:0.55>, simp subject, ``
 
 And that's it ! It's highly customizable and allows for great control.
