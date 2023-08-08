@@ -60,7 +60,7 @@ class Script(scripts.Script):
             # Set click behavior for the save button
         save_button.click(self.output_func, inputs=[addition_input, triggers_input], outputs=[addition_input, triggers_input])
 
-        return [main_accordion] 
+        return [addition_input, triggers_input, save_button, help_accordion]
 
     def output_func(self, addition, triggers):
         self.save_to_file(addition, triggers.split(','))
