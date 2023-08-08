@@ -46,7 +46,7 @@ class Script(scripts.Script):
             "If you wanna edit the file manually: Extensions/AloePromptifier/additions_prompt.json"
         )
 
-        main_accordion = gr.Accordion("Aloe's Promptifier", open=True)
+        main_accordion = gr.Accordion("Aloe's Promptifier", open=False)
 
         with main_accordion:
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
