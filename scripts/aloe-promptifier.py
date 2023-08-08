@@ -58,11 +58,9 @@ class Script(scripts.Script):
                 gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=True, height=200, lines=8)
 
             # Set click behavior for the save button
-            save_button.click(self.output_func, inputs=[addition_input, triggers_input], outputs=[addition_input, triggers_input])
+        save_button.click(self.output_func, inputs=[addition_input, triggers_input], outputs=[addition_input, triggers_input])
 
         return [main_accordion] 
-
-
 
     def output_func(self, addition, triggers):
         self.save_to_file(addition, triggers.split(','))
