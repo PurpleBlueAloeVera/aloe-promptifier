@@ -52,21 +52,17 @@ class Script(scripts.Script):
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
             triggers_input = gr.Textbox(label="Trigger Words", placeholder="Type your trigger words for that specific addition. Write them separated by commas.")
             save_button = gr.Button(value="Save")
-
-            help_accordion = gr.Accordion("Aloe's Promptifier Guide", open=False)
-            with help_accordion:
-                gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=True, height=200, lines=8)
-
-            # Set click behavior for the save button
+            gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=False, height=100, lines=8)
+            
         save_button.click(self.output_func, inputs=[addition_input, triggers_input], outputs=[addition_input, triggers_input])
 
-        return [addition_input, triggers_input, save_button, help_accordion]
+        return [addition_input, triggers_input, save_button]
 
     def output_func(self, addition, triggers):
         self.save_to_file(addition, triggers.split(','))
         return "", "", "Saved successfully!"  # Clearing the text boxes and updating the message box
 
-    def process(self, p):
+    def process(self, p, *args, **kwargs):
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
         if os.path.exists(additions_file):
             with open(additions_file, encoding="utf8") as f:
