@@ -59,58 +59,46 @@ class Script(scripts.Script):
         self.save_to_file(addition, triggers, type_flag)
         return "", "", "Saved successfully!"  # Clearing the text boxes and updating the message box
 
-
     def process(self, p, *args, **kwargs):
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
         if os.path.exists(additions_file):
             with open(additions_file, encoding="utf8") as f:
                 additions_data = json.load(f)
 
-            original_prompt = p.all_prompts[0]
-            detected_additions_main = set()
             detected_additions_pos = set()
             detected_additions_neg = set()
-            used_triggers = set()  # Track which triggers have been used
 
             # Function to detect triggers and add to detected additions set
-            def detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg):
+            def detect_and_add(prompt, type_flag, detected_additions):
                 for addition, info in additions_data.items():
                     for trigger in info["triggers"]:
-                        if trigger not in used_triggers and re.search(r'\b' + re.escape(trigger) + r'\b', prompt):  # Check if the trigger has been used before
-                            if info["type"] == "[pos]":
-                                detected_additions_pos.add(addition)
-                            elif info["type"] == "[neg]":
-                                detected_additions_neg.add(addition)
-                            else:
-                                detected_additions_main.add(addition)
-                            used_triggers.add(trigger)  # Mark the trigger as used
+                        if re.search(r'\b' + re.escape(trigger) + r'\b', prompt):
+                            if info["type"] == type_flag:
+                                detected_additions.add(addition)
 
+            # Detect additions for positive prompts
+            # Detect additions for positive prompts
             for prompt in p.all_prompts:
-            detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg)
+                detect_and_add(prompt, "None", detected_additions_pos)
+                detect_and_add(prompt, "[pos]", detected_additions_pos)
+                # Detect [neg] triggers in positive prompts but add to negative additions
+                detect_and_add(prompt, "[neg]", detected_additions_neg)
 
-            # Appending the detected additions
+            # Detect additions for negative prompts
+            for prompt in p.all_negative_prompts:
+                detect_and_add(prompt, "None", detected_additions_neg)
+                detect_and_add(prompt, "[neg]", detected_additions_neg)
+                detect_and_add(prompt, "[pos]", detected_additions_pos)
 
-            # First, append additions for detected triggers of type None
-            for addition in detected_additions_main:
-                p.all_prompts = [prompt + addition for prompt in p.all_prompts]
-                if getattr(p, 'all_hr_prompts', None) is not None:
-                    p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
-                p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
 
-            # Next, ensure all [pos] additions are added to all_prompts and all_hr_prompts
+            # Appending the detected additions to the respective prompts
             for addition in detected_additions_pos:
                 p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                 if getattr(p, 'all_hr_prompts', None) is not None:
                     p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
-
-            # Lastly, ensure all [neg] additions are added to all_negative_prompts
+                
             for addition in detected_additions_neg:
                 p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
-
-
-
-            if original_prompt != p.all_prompts[0]:
-                p.extra_generation_params["Trigger words prompt"] = original_prompt
         else:
             print(f"File {additions_file} not found.", file=sys.stderr)
 
