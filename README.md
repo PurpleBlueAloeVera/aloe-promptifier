@@ -2,7 +2,7 @@ Aloe's Promptifier
 =======
 A powerful and dynamic tool to enhance your workflow by assigning extra networks, entire prompts, negative prompts, or any string of your choice to trigger words !
 -----------
-![Screenshot](https://media.discordapp.net/attachments/1055304559876120637/1138529893945180190/image.png)
+![Screenshot](https://media.discordapp.net/attachments/1112805199233425458/1141343491788644353/PromtifierCapture.JPG)
 
 ## Install
 
