@@ -70,36 +70,44 @@ class Script(scripts.Script):
             detected_additions_main = set()
             detected_additions_pos = set()
             detected_additions_neg = set()
+            used_triggers = set()  # Track which triggers have been used
 
             # Function to detect triggers and add to detected additions set
             def detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg):
                 for addition, info in additions_data.items():
                     for trigger in info["triggers"]:
-                        if re.search(r'\b' + re.escape(trigger) + r'\b', prompt):
+                        if trigger not in used_triggers and re.search(r'\b' + re.escape(trigger) + r'\b', prompt):  # Check if the trigger has been used before
                             if info["type"] == "[pos]":
                                 detected_additions_pos.add(addition)
                             elif info["type"] == "[neg]":
                                 detected_additions_neg.add(addition)
                             else:
                                 detected_additions_main.add(addition)
-                            break
-            
+                            used_triggers.add(trigger)  # Mark the trigger as used
+
             for prompt in p.all_prompts:
-                detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg)
+            detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg)
 
             # Appending the detected additions
+
+            # First, append additions for detected triggers of type None
             for addition in detected_additions_main:
                 p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                 if getattr(p, 'all_hr_prompts', None) is not None:
                     p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
+                p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
 
+            # Next, ensure all [pos] additions are added to all_prompts and all_hr_prompts
             for addition in detected_additions_pos:
                 p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                 if getattr(p, 'all_hr_prompts', None) is not None:
                     p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
 
+            # Lastly, ensure all [neg] additions are added to all_negative_prompts
             for addition in detected_additions_neg:
                 p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
+
+
 
             if original_prompt != p.all_prompts[0]:
                 p.extra_generation_params["Trigger words prompt"] = original_prompt
@@ -113,4 +121,3 @@ class Script(scripts.Script):
         if getattr(p, 'all_hr_prompts', None) is not None:
             p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
         p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
-        
