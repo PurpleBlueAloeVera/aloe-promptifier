@@ -4,6 +4,10 @@ A powerful and dynamic tool to enhance your workflow by assigning extra networks
 -----------
 ![Screenshot](https://media.discordapp.net/attachments/1112805199233425458/1141343491788644353/PromtifierCapture.JPG)
 
+## Latest update
+
+- You can now choose if the addition will exclusively be appended in the positive prompt, negative prompt, or neutral. Neutral = prompt appends wherever triggers are detected.
+
 ## Install
 
 Simply go in your extensions folder, open a CMD to that directory, and do the following command:
@@ -15,9 +19,8 @@ Go in extensions tab, and manually copy paste the link of the repo, and press in
 
 ## Features
 - Anything you type in additions, will be appended to your prompt after a trigger word is detected
-- Multiple detections = multiple additions
+- Multiple detections = multiple additions (But they do not duplicate, no worries)
 - No need for symbols, or anything. The trigger words will add whatever you assign to them automatically. (LoRAs, prompts, anything)
-
 
 ## Work in progress. . .
 
@@ -42,7 +45,9 @@ Positive prompt:
 Then select if you want it to be a [POS] addition, a [NEG] or a neutral [None] addition. 
 
 POS : No matter WHERE the word is detected, it'll always append the addition to the positive prompt
+
 NEG : No matter WHERE the word is detected, it'll always append the addition to the negative prompt
+
 NONE : It'll always append the addition WHERE the trigger word has been detected.
 
 And that's it ! It's highly customizable and allows for great control.
