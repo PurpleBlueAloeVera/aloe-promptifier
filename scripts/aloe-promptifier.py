@@ -74,10 +74,17 @@ class Script(scripts.Script):
                 for prompt in p.all_prompts:
                     for trigger in info["triggers"]:
                         if re.search(r'\b' + re.escape(trigger) + r'\b', prompt):
-                            if info["type"] == "[pos]" or not ("type" in info):
+                            if info["type"] == "[pos]":
                                 detected_additions_main.add(addition)
                             elif info["type"] == "[neg]":
                                 detected_additions_negative.add(addition)
+                            elif info["type"] == "None":
+                                detected_additions_main.add(addition)  # If trigger is in a positive prompt
+                                # If you also want to check the negative prompts when type is "None", 
+                                # you'll need to loop over them similarly as for the positive prompts
+                                for neg_prompt in p.all_negative_prompts:
+                                    if re.search(r'\b' + re.escape(trigger) + r'\b', neg_prompt):
+                                        detected_additions_negative.add(addition)  # If trigger is in a negative prompt
                             break
 
             for addition in detected_additions_main:
@@ -92,6 +99,7 @@ class Script(scripts.Script):
                 p.extra_generation_params["Trigger words prompt"] = original_prompt
         else:
             print(f"File {additions_file} not found.", file=sys.stderr)
+
 
 
     def append_text(self, p, addition):
