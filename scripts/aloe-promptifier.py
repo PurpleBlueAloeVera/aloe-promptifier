@@ -25,11 +25,15 @@ class Script(scripts.Script):
             data = {}
 
         trigger_list = triggers.split(',')
+        
+        # Add comma and space before the user's addition
+        formatted_addition = ", " + addition
 
-        data[addition] = {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
+        data[formatted_addition] = {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
 
         with open(additions_file, 'w', encoding="utf8") as f:
             json.dump(data, f, indent=4)
+
 
 
     def ui(self, is_img2img):
