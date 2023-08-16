@@ -68,33 +68,37 @@ class Script(scripts.Script):
 
             original_prompt = p.all_prompts[0]
             detected_additions_main = set()
-            detected_additions_negative = set()
+            detected_additions_pos = set()
+            detected_additions_neg = set()
 
             # Function to detect triggers and add to detected additions set
-            def detect_and_add(prompt, additions_set):
+            def detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg):
                 for addition, info in additions_data.items():
                     for trigger in info["triggers"]:
                         if re.search(r'\b' + re.escape(trigger) + r'\b', prompt):
                             if info["type"] == "[pos]":
-                                additions_set.add(addition)
+                                detected_additions_pos.add(addition)
                             elif info["type"] == "[neg]":
-                                detected_additions_negative.add(addition)
-                            elif info["type"] == "None":
-                                additions_set.add(addition)
+                                detected_additions_neg.add(addition)
+                            else:
+                                detected_additions_main.add(addition)
                             break
             
             for prompt in p.all_prompts:
-                detect_and_add(prompt, detected_additions_main)
+                detect_and_add(prompt, detected_additions_main, detected_additions_pos, detected_additions_neg)
 
-            for neg_prompt in p.all_negative_prompts:
-                detect_and_add(neg_prompt, detected_additions_negative)
-
+            # Appending the detected additions
             for addition in detected_additions_main:
                 p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                 if getattr(p, 'all_hr_prompts', None) is not None:
                     p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
 
-            for addition in detected_additions_negative:
+            for addition in detected_additions_pos:
+                p.all_prompts = [prompt + addition for prompt in p.all_prompts]
+                if getattr(p, 'all_hr_prompts', None) is not None:
+                    p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
+
+            for addition in detected_additions_neg:
                 p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
 
             if original_prompt != p.all_prompts[0]:
@@ -103,8 +107,10 @@ class Script(scripts.Script):
             print(f"File {additions_file} not found.", file=sys.stderr)
 
 
+
     def append_text(self, p, addition):
         p.all_prompts = [prompt + addition for prompt in p.all_prompts]
         if getattr(p, 'all_hr_prompts', None) is not None:
             p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
         p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
+        
