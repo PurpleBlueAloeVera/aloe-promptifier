@@ -28,9 +28,9 @@ Any feedback would be greatly appreciated !
 
 Addition:
 
-``, <lora:some_subject_you_simp_over:0.55>, simp subject, ``
+``<lora:some_subject_you_simp_over:0.55>, simp subject, ``
 
-Trigger words:
+Trigger words (as many as you want, they won't duplicate the additions):
 
 ``simpsu``
 
@@ -38,5 +38,11 @@ How the prompt will change if you type "simpsu":
 
 Positive prompt:
 ``simpsu, <lora:some_subject_you_simp_over:0.55>, simp subject, ``
+
+Then select if you want it to be a [POS] addition, a [NEG] or a neutral [None] addition. 
+
+POS : No matter WHERE the word is detected, it'll always append the addition to the positive prompt
+NEG : No matter WHERE the word is detected, it'll always append the addition to the negative prompt
+NONE : It'll always append the addition WHERE the trigger word has been detected.
 
 And that's it ! It's highly customizable and allows for great control.
