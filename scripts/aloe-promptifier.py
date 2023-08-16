@@ -34,7 +34,7 @@ class Script(scripts.Script):
 
     def ui(self, is_img2img):
         help_value = (
-            "In addition, you're gonna want to type whatever LoRAs or embeddings you want the triggers words to add to the prompt."
+            "In addition, you're gonna want to type whatever LoRAs or embeddings you want the triggers words to add to the prompt. In the triggers you'll want to put whatever keyword(s) you want to be the triggers that'll append the addition you chose to your prompt. Then, by selecting POS or NEG, you decide to lock its place. Meaning if you picked POS, where ever you type the trigger, will only append the addition to the positive prompt. And vice-vera. You may also choose NONE, if you want it to behave based on where your keyword is detected. If detected in positive prompt, addition will be appended to positive prompt."
         )
 
         main_accordion = gr.Accordion("Aloe's Promptifier", open=True)
