@@ -4,10 +4,7 @@ import json
 import gradio as gr
 import modules.scripts as scripts
 
-# Determine the path to the directory containing the currently executing script
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Go up one directory to reach the main folder of the extension
 repo_dir = os.path.join(current_dir, '..')
 
 class Script(scripts.Script):
@@ -18,49 +15,46 @@ class Script(scripts.Script):
     def show(self, is_img2img):
         return scripts.AlwaysVisible
 
-    def save_to_file(self, addition, triggers):
+    def save_to_file(self, addition, triggers, type_flag):
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
-        
+
         if os.path.exists(additions_file):
             with open(additions_file, encoding="utf8") as f:
                 data = json.load(f)
         else:
             data = {}
 
-        data[addition] = triggers
+        trigger_list = triggers.split(',')
+
+        data[addition] = {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
 
         with open(additions_file, 'w', encoding="utf8") as f:
             json.dump(data, f, indent=4)
 
+
     def ui(self, is_img2img):
-        # Create a main accordion for all widgets
         help_value = (
-            "In addition, you're gonna want to type whatever LoRAs or embeddings you want the triggers words to add to the prompt.\n\n"
-            "2. Trigger Words:\n"
-            "In trigger words, you type the words you want to be automatic triggers for the prompt addition. And they should be separated by commas. DO NOT PUT A COMMA AT THE END !! Example: something, trigger, yes\n\n"
-            "3. Click 'Save' to save add this your configuration. You can add as many as you want.\n\n"
-            "BEHAVIOUR:\n\n"
-            "The detection script will detect multiple keywords and add multiple additions. So make sure to organize it well !\n\n"
-            "Example:\n"
-            "If you have a LoRA for clothes, that has \"wearing\" as a trigger and another LoRA for.. haircuts, that has \"hair\" in the triggers and that you type \"wearing and hair\" in the prompt. It'll load both LoRAs.\n\n"
-            "If you wanna edit the file manually: Extensions/AloePromptifier/additions_prompt.json"
+            "In addition, you're gonna want to type whatever LoRAs or embeddings you want the triggers words to add to the prompt."
         )
 
-        main_accordion = gr.Accordion("Aloe's Promptifier", open=False)
+        main_accordion = gr.Accordion("Aloe's Promptifier", open=True)
 
         with main_accordion:
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
             triggers_input = gr.Textbox(label="Trigger Words", placeholder="Type your trigger words for that specific addition. Write them separated by commas.")
+            type_selector = gr.Radio(label="Type of Trigger", choices=["[pos]", "[neg]", "None"], default="None")  # Adding the type selector
             save_button = gr.Button(value="Save")
-            gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=False, height=100, lines=8)
-            
-        save_button.click(self.output_func, inputs=[addition_input, triggers_input], outputs=[addition_input, triggers_input])
+            help_text = gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=False, height=100, lines=8)
+                
+            save_button.click(self.output_func, inputs=[addition_input, triggers_input, type_selector], outputs=[addition_input, triggers_input])  # Add type_selector to inputs
 
-        return [addition_input, triggers_input, save_button]
+            # Return components as a list
+            return [addition_input, triggers_input, type_selector, save_button, help_text]
 
-    def output_func(self, addition, triggers):
-        self.save_to_file(addition, triggers.split(','))
+    def output_func(self, addition, triggers, type_flag):
+        self.save_to_file(addition, triggers, type_flag)
         return "", "", "Saved successfully!"  # Clearing the text boxes and updating the message box
+
 
     def process(self, p, *args, **kwargs):
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
@@ -72,18 +66,14 @@ class Script(scripts.Script):
             detected_additions_main = set()
             detected_additions_negative = set()
 
-            for prompt in p.all_prompts:
-                for addition, triggers in additions_data.items():
-                    for trigger in triggers:
+            for addition, info in additions_data.items():
+                for prompt in p.all_prompts:
+                    for trigger in info["triggers"]:
                         if re.search(r'\b' + re.escape(trigger) + r'\b', prompt):
-                            detected_additions_main.add(addition)
-                            break
-
-            for negative_prompt in p.all_negative_prompts:
-                for addition, triggers in additions_data.items():
-                    for trigger in triggers:
-                        if re.search(r'\b' + re.escape(trigger) + r'\b', negative_prompt):
-                            detected_additions_negative.add(addition)
+                            if info["type"] == "[pos]" or not ("type" in info):
+                                detected_additions_main.add(addition)
+                            elif info["type"] == "[neg]":
+                                detected_additions_negative.add(addition)
                             break
 
             for addition in detected_additions_main:
@@ -98,6 +88,7 @@ class Script(scripts.Script):
                 p.extra_generation_params["Trigger words prompt"] = original_prompt
         else:
             print(f"File {additions_file} not found.", file=sys.stderr)
+
 
     def append_text(self, p, addition):
         p.all_prompts = [prompt + addition for prompt in p.all_prompts]
