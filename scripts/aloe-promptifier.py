@@ -45,24 +45,20 @@ class Script(scripts.Script):
         main_accordion = gr.Accordion("Aloe's Promptifier", open=False)
 
         with main_accordion:
-            extension_toggle = gr.Checkbox(label="Enable Extension", default=True)
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
             triggers_input = gr.Textbox(label="Trigger Words", placeholder="Type your trigger words for that specific addition. Write them separated by commas.")
             type_selector = gr.Radio(label="Type of Trigger", choices=["[pos]", "[neg]", "None"], default="None")  # Adding the type selector
             save_button = gr.Button(value="Save")
             help_text = gr.Textbox(label="Scroll down to see the full text", value=(help_value), editable=False, height=100, lines=8)
                 
-            save_button.click(self.output_func, inputs=[addition_input, triggers_input, type_selector, extension_toggle], outputs=[addition_input, triggers_input])
+            save_button.click(self.output_func, inputs=[addition_input, triggers_input, type_selector], outputs=[addition_input, triggers_input])  # Add type_selector to inputs
 
             # Return components as a list
-            return [addition_input, triggers_input, type_selector, save_button, help_text, extension_toggle]
+            return [addition_input, triggers_input, type_selector, save_button, help_text]
 
-    def output_func(self, addition, triggers, type_flag, is_enabled):
-        if is_enabled:
-            self.save_to_file(addition, triggers, type_flag)
-            return "", "", "Saved successfully!"
-        return addition, triggers, "Extension disabled!"
-
+    def output_func(self, addition, triggers, type_flag):
+        self.save_to_file(addition, triggers, type_flag)
+        return "", "", "Saved successfully!"  # Clearing the text boxes and updating the message box
     def regulator(self, p):
         regulated_file = os.path.join(repo_dir, "regulated.json")
         if os.path.exists(regulated_file):
@@ -93,9 +89,8 @@ class Script(scripts.Script):
             print(f"File {regulated_file} not found.", file=sys.stderr)
 
 
-    def process(self, p, is_enabled, *args, **kwargs):
-        if not is_enabled:
-            return
+    def process(self, p, *args, **kwargs):
+        # Processing with the additions
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
         if os.path.exists(additions_file):
             with open(additions_file, encoding="utf8") as f:
