@@ -45,7 +45,7 @@ class Script(scripts.Script):
         main_accordion = gr.Accordion("Aloe's Promptifier", open=False)
 
         with main_accordion:
-            extension_toggle = gr.Checkbox(label="Enable Extension", default=False)
+            extension_toggle = gr.Checkbox(label="Enable Extension", default=True)
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
             triggers_input = gr.Textbox(label="Trigger Words", placeholder="Type your trigger words for that specific addition. Write them separated by commas.")
             type_selector = gr.Radio(label="Type of Trigger", choices=["[pos]", "[neg]", "None"], default="None")  # Adding the type selector
