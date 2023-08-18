@@ -2,5 +2,5 @@
 ##
 
 {
-  "safe|words|separeted|by|vertical|bars": ["banned","words","that","get","don't","make","it","to","the","generation","if","safe","word(s)","detected","in","prompt"]
+  "safe|words|separeted|by|vertical|bars": ["banned","words","that","don't","make","it","to","the","generation","if","safe","word(s)","detected","in","prompt"]
 }
