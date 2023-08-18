@@ -18,20 +18,23 @@ class Script(scripts.Script):
 
     def save_to_file(self, addition, triggers, type_flag):
         additions_file = os.path.join(repo_dir, "additions_prompt.json")
-
-        if os.path.exists(additions_file):
-            with open(additions_file, encoding="utf8") as f:
-                data = json.load(f)
-        else:
-            data = {}
-
+        
         trigger_list = triggers.split(',')
         
         # Add comma and space before the user's addition
         formatted_addition = ", " + addition
 
-        data[formatted_addition] = {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
+        # If the file doesn't exist, initialize data with the user's input
+        if not os.path.exists(additions_file):
+            data = {
+                formatted_addition: {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
+            }
+        else:  # If the file exists, load its content and add the new entry
+            with open(additions_file, encoding="utf8") as f:
+                data = json.load(f)
+                data[formatted_addition] = {"type": type_flag, "triggers": [t.strip() for t in trigger_list]}
 
+        # Save the updated data back to the file
         with open(additions_file, 'w', encoding="utf8") as f:
             json.dump(data, f, indent=4)
 
@@ -60,8 +63,11 @@ class Script(scripts.Script):
             return [enable_checkbox, addition_input, triggers_input, type_selector, save_button, help_text]
 
     def output_func(self, addition, triggers, type_flag):
+        if type_flag is None:
+            type_flag = "None"
         self.save_to_file(addition, triggers, type_flag)
         return "", "", "Saved successfully!"  # Clearing the text boxes and updating the message box
+
 
     def regulator(self, p):
         regulated_file = os.path.join(repo_dir, "regulated.json")
