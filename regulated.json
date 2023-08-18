@@ -1,3 +1,6 @@
-{
+## This is the structure of the regulator function
+##
 
+{
+  "safe|words|separeted|by|vertical|bars": ["banned","words","that","get","don't","make","it","to","the","generation","if","safe","word(s)","detected","in","prompt"]
 }
