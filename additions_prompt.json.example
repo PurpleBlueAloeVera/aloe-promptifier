@@ -1,0 +1,14 @@
+## This is the structure of the additions_prompt.json. 
+## The script will automatically create one once you save your first addition from the WEBUI
+{
+    ", Loras, embeds, words, (weights:0.1), etc. ": {
+        "type": "None",
+        "triggers": [
+            "trigger",
+            "words",
+            "that",
+            "activate",
+            "addition"
+        ]
+    },
+}
