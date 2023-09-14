@@ -2,7 +2,6 @@ import os
 import re
 import json
 import gradio as gr
-import subprocess
 import modules.scripts as scripts
 import sys
 
@@ -10,6 +9,30 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 repo_dir = os.path.join(current_dir, '..')
 
 class Script(scripts.Script):
+    def __init__(self):
+        updated_types = os.path.join(repo_dir, "updated_types.txt")
+        if not os.path.exists(updated_types):
+            self.replace_keywords()
+            with open(updated_types, 'w') as f:
+                f.write('Executed')
+    def replace_keywords(self):
+        additions_file = os.path.join(repo_dir, "additions_prompt.json")
+        if not os.path.exists(additions_file):
+            print(f"File {additions_file} not found.", file=sys.stderr)
+            return
+        with open(additions_file, encoding="utf8") as f:
+            data = json.load(f)
+        for addition, info in data.items():
+            type_flag = info.get("type", "")
+            if type_flag == "[Pos]":
+                info["type"] = "Positive"
+            elif type_flag == "[Neg]":
+                info["type"] = "Negative"
+            elif type_flag == "None":
+                info["type"] = "Default"
+        with open(additions_file, 'w', encoding="utf8") as f:
+            json.dump(data, f, indent=4)
+            
     def title(self):
         return "Prompt Appender"
     def show(self, is_img2img):
@@ -30,10 +53,10 @@ class Script(scripts.Script):
             json.dump(data, f, indent=4)
             
     def ui(self, is_img2img):
-        help_value = "[Positive] = Appends only to the positive prompt no matter where the trigger word is detected. \n[Negative] = Appends only to the negative prompt, no matter where the trigger word is detected.\n[Default] = Appends wherever the trigger word is detected"  # Your help text here
+        help_value = "[Positive] = Appends only to the positive prompt no matter where the trigger word is detected. \n[Negative] = Appends only to the negative prompt, no matter where the trigger word is detected.\n[Default] = Appends wherever the trigger word is detected" 
         main_accordion = gr.Accordion("Aloe's Promptifier", open=False)
         with main_accordion:
-            enable_checkbox = gr.Checkbox(label="Enable Prompt Appender", default=True)
+            enable_checkbox = gr.Checkbox(label="Enable Prompt Appender", default=False)
             addition_input = gr.Textbox(label="Addition", placeholder="Type whatever LoRAs, embeddings.. or plain text that you want the triggers words to add to the prompt")
             triggers_input = gr.Textbox(label="Trigger Words", placeholder="Type your trigger words for that specific addition. Write them separated by commas.")
             type_selector = gr.Radio(label="Type of Trigger", choices=["Positive", "Negative", "Default"], default="Default")
