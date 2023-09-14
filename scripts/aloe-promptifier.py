@@ -76,7 +76,7 @@ class Script(scripts.Script):
         os.system(f"start {additions_file}")
 
     def output_func(self, addition, triggers, type_flag):
-        if type_flag is Default:
+        if type_flag is None:
             type_flag = "Default"
         self.save_to_file(addition, triggers, type_flag)
         return "", "", "Saved successfully!"
