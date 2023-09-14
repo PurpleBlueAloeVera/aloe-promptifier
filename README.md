@@ -27,13 +27,13 @@ Option 2: Manual Installation
 
 ## Features
 
-    Dynamic Additions: Anything you type in the 'additions' field will be appended to your prompt when a trigger word is detected.
-    No Duplicates: Multiple trigger words can lead to multiple additions, but they won't duplicate.
-    Automatic Appending: No need for special symbols. The trigger words will automatically append the assigned strings, including LoRAs, prompts, and more.
+Dynamic Additions: Anything you type in the 'additions' field will be appended to your prompt when a trigger word is detected.
+No Duplicates: Multiple trigger words can lead to multiple additions, but they won't duplicate.
+Automatic Appending: No need for special symbols. The trigger words will automatically append the assigned strings, including LoRAs, prompts, and more.
 
 ## Functions
 
-    Positive = Appends only to the <positive> prompt no matter where the trigger word is detected. 
-    Negative = Appends only to the <negative> prompt, no matter where the trigger word is detected.
-    Default = Appends <wherever the trigger word is detected>.
+`Positive` = Appends only to the `positive` prompt no matter where the trigger word is detected. 
+`Negative` = Appends only to the `negative` prompt, no matter where the trigger word is detected.
+`Default` = Appends `wherever the trigger word is detected`.
 
