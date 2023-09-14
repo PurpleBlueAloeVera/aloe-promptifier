@@ -1,53 +1,39 @@
-Aloe's Promptifier
-=======
-A powerful and dynamic tool to enhance your workflow by assigning extra networks, entire prompts, negative prompts, or any string of your choice to trigger words !
+## Aloe's Promptifier
+
+A powerful and dynamic tool designed to enhance your workflow. Assign extra networks, entire prompts, negative prompts, or any string of your choice to specific trigger words.
 -----------
-![Screenshot](https://media.discordapp.net/attachments/1112805199233425458/1141343491788644353/PromtifierCapture.JPG)
+![Screenshot](https://media.discordapp.net/attachments/1147985470035337290/1152008127252803644/image.png)
 
-## Latest update
-
-- You can now choose if the addition will exclusively be appended in the positive prompt, negative prompt, or neutral. Neutral = prompt appends wherever triggers are detected.
+## Latest Updates
+    
+    - added button to quickly edit the .json file if corrections are needed
+    - added more clarity to the buttons
+    - cleaned the code
+    - help textbox updated which provides a quick guide
 
 ## Install
 
-Simply go in your extensions folder, open a CMD to that directory, and do the following command:
-git clone https://github.com/PurpleBlueAloeVera/aloe-promptifier
+Option 1: Using CMD
 
-OR
+    Navigate to your extensions folder.
+    Open a command prompt in that directory.
+    Run the following command:
 
-Go in extensions tab, and manually copy paste the link of the repo, and press install. Then restart.
+Option 2: Manual Installation
+
+    Go to the Extensions tab.
+    Copy and paste the repository link.
+    Click 'Install' and restart.
 
 ## Features
-- Anything you type in additions, will be appended to your prompt after a trigger word is detected
-- Multiple detections = multiple additions (But they do not duplicate, no worries)
-- No need for symbols, or anything. The trigger words will add whatever you assign to them automatically. (LoRAs, prompts, anything)
 
-## Work in progress. . .
+    Dynamic Additions: Anything you type in the 'additions' field will be appended to your prompt when a trigger word is detected.
+    No Duplicates: Multiple trigger words can lead to multiple additions, but they won't duplicate.
+    Automatic Appending: No need for special symbols. The trigger words will automatically append the assigned strings, including LoRAs, prompts, and more.
 
-This is my first public extension, and a very experimental one. I hope anyone can find something useful to it. I know that I personally find it very usefull and practical since I use it all the time.
-Any feedback would be greatly appreciated !
+## Functions
 
-## Examples
+    Positive = Appends only to the <positive> prompt no matter where the trigger word is detected. 
+    Negative = Appends only to the <negative> prompt, no matter where the trigger word is detected.
+    Default = Appends <wherever the trigger word is detected>.
 
-Addition:
-
-``<lora:some_subject_you_simp_over:0.55>, simp subject, ``
-
-Trigger words (as many as you want, they won't duplicate the additions):
-
-``simpsu``
-
-How the prompt will change if you type "simpsu":
-
-Positive prompt:
-``simpsu, <lora:some_subject_you_simp_over:0.55>, simp subject, ``
-
-Then select if you want it to be a [POS] addition, a [NEG] or a neutral [None] addition. 
-
-POS : No matter WHERE the word is detected, it'll always append the addition to the positive prompt
-
-NEG : No matter WHERE the word is detected, it'll always append the addition to the negative prompt
-
-NONE : It'll always append the addition WHERE the trigger word has been detected.
-
-And that's it ! It's highly customizable and allows for great control.
