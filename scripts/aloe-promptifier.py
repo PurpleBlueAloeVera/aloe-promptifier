@@ -93,12 +93,12 @@ class Script(scripts.Script):
                                     detected_additions.add(addition)
                 for prompt in p.all_prompts:
                     detect_and_add(prompt, "Default", detected_additions_Positive)
-                    detect_and_add(prompt, "Positiveitive", detected_additions_Positive)
+                    detect_and_add(prompt, "Positive", detected_additions_Positive)
                     detect_and_add(prompt, "Negative", detected_additions_neg)
                 for prompt in p.all_negative_prompts:
                     detect_and_add(prompt, "Default", detected_additions_neg)
                     detect_and_add(prompt, "Negative", detected_additions_neg)
-                    detect_and_add(prompt, "Positiveitive", detected_additions_Positive)
+                    detect_and_add(prompt, "Positive", detected_additions_Positive)
                 for addition in detected_additions_Positive:
                     p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                     if getattr(p, 'all_hr_prompts', None) is not None:
