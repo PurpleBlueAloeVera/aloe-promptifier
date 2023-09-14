@@ -84,7 +84,7 @@ class Script(scripts.Script):
                 with open(additions_file, encoding="utf8") as f:
                     additions_data = json.load(f)
                 detected_additions_Positive = set()
-                detected_additions_neg = set()
+                detected_additions_Negative = set()
                 def detect_and_add(prompt, type_flag, detected_additions):
                     for addition, info in additions_data.items():
                         for trigger in info["triggers"]:
@@ -94,16 +94,16 @@ class Script(scripts.Script):
                 for prompt in p.all_prompts:
                     detect_and_add(prompt, "Default", detected_additions_Positive)
                     detect_and_add(prompt, "Positive", detected_additions_Positive)
-                    detect_and_add(prompt, "Negative", detected_additions_neg)
+                    detect_and_add(prompt, "Negative", detected_additions_Negative)
                 for prompt in p.all_negative_prompts:
-                    detect_and_add(prompt, "Default", detected_additions_neg)
-                    detect_and_add(prompt, "Negative", detected_additions_neg)
+                    detect_and_add(prompt, "Default", detected_additions_Negative)
+                    detect_and_add(prompt, "Negative", detected_additions_Negative)
                     detect_and_add(prompt, "Positive", detected_additions_Positive)
                 for addition in detected_additions_Positive:
                     p.all_prompts = [prompt + addition for prompt in p.all_prompts]
                     if getattr(p, 'all_hr_prompts', None) is not None:
                         p.all_hr_prompts = [prompt + addition for prompt in p.all_hr_prompts]
-                for addition in detected_additions_neg:
+                for addition in detected_additions_Negative:
                     p.all_negative_prompts = [prompt + addition for prompt in p.all_negative_prompts]
             else:
                 print(f"File {additions_file} not found.", file=sys.stderr)
