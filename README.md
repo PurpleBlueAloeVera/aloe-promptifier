@@ -21,7 +21,7 @@ Option 1: Using CMD
 
     Navigate to your extensions folder.
     Open a command prompt in that directory.
-    Run the following command: https://github.com/PurpleBlueAloeVera/aloe-promptifier
+    Run the following command: git clone https://github.com/PurpleBlueAloeVera/aloe-promptifier
 
 Option 2: Manual Installation
 
