@@ -34,6 +34,8 @@ Option 2: Manual Installation
 - Dynamic Additions: Anything you type in the 'additions' field will be appended to your prompt when a trigger word is detected.
 - No Duplicates: Multiple trigger words can lead to multiple additions, but they won't duplicate.
 - Automatic Appending: No need for special symbols. The trigger words will automatically append the assigned strings, including LoRAs, prompts, and more.
+- Regulator feature to create a list of safe words which IF detected, won't allow the banned words to be used. (Great for people that want to regulate their public SD bots, or else.)
+      Example of a regulator use case would be: if the word "child" is detected in the prompt, any banned words of your choosing WON'T make it to generation if the user types the banned words. Will be further enhanced with time.
 
 ## Functions
 
